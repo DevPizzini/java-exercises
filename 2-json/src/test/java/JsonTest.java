@@ -2,10 +2,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import it.iol.json.JsonHelper;
 import it.iol.json.model.Staff;
@@ -30,7 +27,7 @@ public class JsonTest {
      * @throws IOException
      */
     @Test
-    public void javaToJsonObject() throws IOException {
+    public void javaToJsonString() throws IOException {
         Staff staff = getStaff();
         String jsonString = JsonHelper.objectToString(staff);
         System.out.println("jsonString: " + JsonHelper.objectToPrettyString(staff));
@@ -44,11 +41,12 @@ public class JsonTest {
      * @throws IOException
      */
     @Test
-    public void jsonStringToObject() throws JsonProcessingException {
+    public void jsonStringToJava() throws JsonProcessingException {
         Staff staff = getStaff();
         String jsonString = JsonHelper.objectToString(staff);
         Staff s = JsonHelper.stringToObject(jsonString, Staff.class);
         assert (s.toString().equals(staff.toString()));
+
     }
 
     /**
@@ -57,7 +55,7 @@ public class JsonTest {
      * @throws IOException
      */
     @Test
-    public void objectToJsonStringSalaryNull() throws JsonProcessingException {
+    public void javaToJsonStringSalaryNull() throws JsonProcessingException {
         Staff staff = getStaff();
         staff.setSalary(null);
         String jsonString = JsonHelper.objectToString(staff);
@@ -70,18 +68,39 @@ public class JsonTest {
      * java object to jsonNode
      */
     @Test
-    public void objectToJson() {
+    public void javaToJson() {
         Staff staff = getStaff();
         JsonNode json = JsonHelper.objectToJson(staff);
-        System.out.println(json.toString());
+        System.out.println(json.elements());
         assert ("{\"name\":\"bob\",\"age\":30,\"position\":[\"manager\",\"hr\"],\"skills\":[\"foo\",\"bar\"],\"salary\":{\"abc\":10000,\"def\":20000}}".equals(json.toString()));
+    }
+
+    @Test
+    public void jsonNodeEquals(){
+        Staff a=getStaff();
+        JsonNode json1=JsonHelper.objectToJson(a);
+        JsonNode json2=JsonHelper.objectToJson(a);
+        assert JsonHelper.equals(json1,json2);
+    }
+
+    @Test
+    public void jsonNodenotEquals(){
+        Staff a=getStaff();
+        JsonNode json1=JsonHelper.objectToJson(a);
+        //a.setAge(1);
+        List<String> posi=new ArrayList<>();
+        posi.add("hr");
+        posi.add("diverso");
+        a.setPosition(posi);
+        JsonNode json2=JsonHelper.objectToJson(a);
+        assert !JsonHelper.equals(json1,json2);
     }
 
     /**
      * jsonNode to java object
      */
     @Test
-    public void objectTojava() {
+    public void jsonTojava() {
         Staff staff = getStaff();
         JsonNode json = JsonHelper.objectToJson(staff);
         System.out.println(json.toString());

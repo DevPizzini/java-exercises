@@ -1,5 +1,6 @@
 package it.iol.ws;
 
+import it.iol.ws.model.CSVWriter;
 import it.iol.ws.model.Employee;
 import it.iol.ws.model.Greeting;
 import it.iol.ws.util.IApplicationProperties;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class MyController {
     private static final Logger log = LoggerFactory.getLogger(MyController.class);
     private int counter = 0;
+    //private int addCounter = 0;
 
     @Autowired
     private IApplicationProperties applicationProperties;
@@ -43,7 +45,21 @@ public class MyController {
     ResponseEntity addEmployee(@RequestBody Employee newEmployee, @PathVariable Long id) {
         log.debug("Store in file: {} employee: {} id: {}", applicationProperties.getFileOut(), newEmployee, id);
         // TODO write in {file.out} id,name,role,date
+        log.debug(applicationProperties.getFileOut());
+        CSVWriter.writer(newEmployee,id, applicationProperties.getFileOut());
         return new ResponseEntity(HttpStatus.OK);
     }
+    /*
+    @PostMapping("/employees")
+    ResponseEntity addEmployee(@RequestBody Employee newEmployee) {
+        int id =++addCounter;
+        log.debug("Store in file: {} employee: {} id: {}", applicationProperties.getFileOut(), newEmployee,id);
+        // TODO write in {file.out} id,name,role,date
+        log.debug(applicationProperties.getFileOut());
+        CSVWriter.writer(newEmployee,id, applicationProperties.getFileOut());
+        return new ResponseEntity(HttpStatus.OK);
+    }
+    */
+
 
 }
