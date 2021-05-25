@@ -10,20 +10,19 @@ public class ValidationException extends Exception {
 
     private List<String> errors = new ArrayList<>();
 
-    public void add(@NonNull String error) {
-        this.errors.add(error);
-    }
-
     public ValidationException() {
     }
 
-    public ValidationException(@NonNull String err) {
-        //errors = List.of(err);  java 11
-        errors = Arrays.asList(err);
+    public ValidationException(@NonNull String error) {
+        add(error);
     }
 
     public ValidationException(@NonNull List<String> errors) {
         this.errors = errors;
+    }
+
+    public void add(@NonNull String error) {
+        errors.add(error);
     }
 
     public boolean isEmpty() {

@@ -1,15 +1,15 @@
 package it.iol.ws.validator;
 
 import it.iol.ws.model.Employee;
+import it.iol.ws.util.StringUtil;
 import lombok.NonNull;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Validator class for Employee
  */
-public class ValidatorEmployee {
+public class ValidatorEmployee implements IValidator {
 
-    private ValidationException validationException = new ValidationException();
+    private final ValidationException validationException = new ValidationException();
     private Employee employee;
 
     private ValidatorEmployee() {
@@ -20,12 +20,12 @@ public class ValidatorEmployee {
     }
 
     private void roleValidator() {
-        if (StringUtils.isBlank(employee.getRole())) validationException.add("role is empty");
+        if (StringUtil.isBlank(employee.getRole())) validationException.add("role is empty");
     }
 
     private void nameValidator() {
-        if (StringUtils.isBlank(employee.getName())) validationException.add("name is empty");else
-        if (employee.getName().length() < 3) validationException.add("name is too short");
+        if (StringUtil.isBlank(employee.getName())) validationException.add("name is empty");
+        else if (employee.getName().length() < 3) validationException.add("name is too short");
     }
 
     /**

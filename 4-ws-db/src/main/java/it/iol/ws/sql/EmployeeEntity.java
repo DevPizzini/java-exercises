@@ -16,6 +16,7 @@ public class EmployeeEntity {
 
     private String department;
 
+    // spring needs empty constructor
     public EmployeeEntity() {
     }
 

@@ -17,27 +17,25 @@ import java.util.Optional;
  * Employee table
  */
 public interface DaoEmployee {
-     Logger log = LoggerFactory.getLogger(DaoEmployee.class);
+    Logger log = LoggerFactory.getLogger(DaoEmployee.class);
 
-     static void insert(@NonNull JdbcTemplate jdbcTemplate, @NonNull Employee employee) throws DataAccessException {
+    static void insert(@NonNull JdbcTemplate jdbcTemplate, @NonNull Employee employee) throws DataAccessException {
         val sql = "insert into employee(name,role,department) values(?,?,?)";
-        log.debug(sql);
+        log.debug("insert: {} {} {} {}", sql, employee.getName(), employee.getRole(), employee.getDepartment());
         jdbcTemplate.update(sql, employee.getName(), employee.getRole(), employee.getDepartment());
     }
 
     static List<EmployeeEntity> readByRole(@NonNull JdbcTemplate jdbcTemplate, @NonNull String role) {
         val sql = String.format("select name,role,department from employee where role = '%s'", role);
-        log.debug(sql);
+        log.debug("readByRole: {} {}", sql, role);
         return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(EmployeeEntity.class));
     }
 
     static Optional<EmployeeEntity> readById(@NonNull JdbcTemplate jdbcTemplate, @NonNull String name) {
-        val sql = String.format("select name,role,department from employee where name = ?");
-        log.debug(sql);
+        val sql = "select name,role,department from employee where name = ?";
+        log.debug("readById: {} {}", sql, name);
         try {
-            val emp = (EmployeeEntity) jdbcTemplate.queryForObject(
-                    sql,
-                    new BeanPropertyRowMapper(EmployeeEntity.class), name);
+            val emp = (EmployeeEntity) jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper(EmployeeEntity.class), name);
             return Optional.ofNullable(emp);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

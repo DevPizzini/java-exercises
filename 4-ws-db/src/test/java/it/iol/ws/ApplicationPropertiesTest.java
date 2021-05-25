@@ -14,6 +14,7 @@ public class ApplicationPropertiesTest {
 
     @Test
     public void appProp() {
+        // lookup in application-it.properties
         assertEquals(applicationProperties.getFoo(), "it");
     }
 }

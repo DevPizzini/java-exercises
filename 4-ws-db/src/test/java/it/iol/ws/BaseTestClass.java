@@ -1,8 +1,6 @@
 package it.iol.ws;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,8 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class BaseTestClass {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+abstract class BaseTestClass {
 
     @Autowired
     private Environment environment;
@@ -28,13 +25,14 @@ class BaseTestClass {
         try {
             jdbcTemplate.execute("DROP TABLE employee");
         } catch (Exception e) {
+            // ignore if table doesn't exist
         }
         try {
-            jdbcTemplate.execute("CREATE TABLE employee (\t\n" +
-                    "\tname varchar(25) NOT NULL,\n" +
-                    "\trole varchar(25) NOT null,\n" +
-                    "\tdepartment varchar(15) null,\n" +
-                    "\tCONSTRAINT name_pkey PRIMARY KEY (name)\t\n" +
+            jdbcTemplate.execute("CREATE TABLE employee (\n" +
+                    "name varchar(25) NOT NULL,\n" +
+                    "role varchar(25) NOT null,\n" +
+                    "department varchar(15) null,\n" +
+                    "CONSTRAINT name_pkey PRIMARY KEY (name)\n" +
                     ");");
         } catch (Exception e) {
             assert e.getMessage().contains("already exists") : "error on creating table " + e.getMessage();

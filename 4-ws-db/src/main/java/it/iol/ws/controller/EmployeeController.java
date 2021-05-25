@@ -5,9 +5,8 @@ import it.iol.ws.validator.ValidationException;
 import it.iol.ws.model.Employee;
 import it.iol.ws.service.EmployeeService;
 import it.iol.ws.util.JsonHelper;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -18,10 +17,11 @@ import org.springframework.web.bind.annotation.*;
 /**
  * https://spring.io/guides/gs/rest-service/
  */
+
+@Slf4j
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     @Qualifier("jdbcTemplate1")
@@ -32,14 +32,18 @@ public class EmployeeController {
      * @param id
      * @return
      */
-    @PutMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
+    @PostMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
     ResponseEntity<JsonNode> addEmployee(@RequestBody Employee employee, @PathVariable Long id) {
-        log.debug("received %s id: %d {}", employee, id);
+        log.debug("received {} id: {}", employee, id);
         try {
-            val report = EmployeeService.insert(jdbcTemplate, employee);
+            val report = EmployeeService.validateAndInsert(jdbcTemplate, employee);
             return new ResponseEntity<>(JsonHelper.objectToJson(report), HttpStatus.OK);
         } catch (ValidationException errors) {
+            log.error("addEmployee {}", errors.getErrors());
             return new ResponseEntity<>(JsonHelper.objectToJson(errors.getErrors()), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            log.error("addEmployee", e);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

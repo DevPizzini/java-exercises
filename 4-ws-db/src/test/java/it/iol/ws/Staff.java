@@ -16,12 +16,12 @@ public class Staff {
     private int age;
 
     @NonNull
-    private List<String> position;                  // list
+    private List<String> position;
 
     @NonNull
-    private List<String> skills;                    // List
+    private List<String> skills;
 
-    private Map<String, Integer> salary;            // Map
+    private Map<String, Integer> salary;
 
     private Staff() {
     }
