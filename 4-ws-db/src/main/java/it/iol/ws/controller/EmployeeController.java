@@ -51,9 +51,9 @@ public class EmployeeController {
     @GetMapping(path = "/{name}", produces = "application/json")
     ResponseEntity<JsonNode> getEmployee(@PathVariable String name) {
         log.debug("received id: {}", name);
-        val json = EmployeeService.getById(jdbcTemplate, name);
-        if (json.isPresent()) {
-            val e = json.get();
+        val empOptional = EmployeeService.getById(jdbcTemplate, name);
+        if (empOptional.isPresent()) {
+            val e = empOptional.get();
             return new ResponseEntity<>(JsonHelper.objectToJson(e), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

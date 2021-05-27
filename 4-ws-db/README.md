@@ -57,6 +57,6 @@ throw an error:
 
 TODO
 ----
-* Add `id` field (type _UUID_) in Employee table and use it as unique key instead of _name_ filed (change create table in BaseTestClass too). Add a validator for `id`. Remove _id_ in _EmployeeController.addEmployee_ method.
+* Add `id` field (type _UUID_) in Employee table and use it as primary key instead of _name_ filed (change create table in BaseTestClass too). Add a validator for `id`. Remove _id_ in _EmployeeController.addEmployee_ method. Add `create_date` in employee table.
 * Add `DELETE` in _EmployeeController_ and modify unit test.
 * Dump every 5 minutes the `employee` table into a `CSV` file (define the file name in `application-{env}.properties`).
