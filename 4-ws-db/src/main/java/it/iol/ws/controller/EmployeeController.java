@@ -56,7 +56,7 @@ public class EmployeeController {
             val e = json.get();
             return new ResponseEntity<>(JsonHelper.objectToJson(e), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
     }

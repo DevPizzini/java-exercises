@@ -12,9 +12,7 @@
     <groupId>it.iol</groupId>
     <artifactId>ws-db</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
-
-    <name>ws-db</name>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!--        spring-->

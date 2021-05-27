@@ -37,7 +37,7 @@ Compile
 Run
 ----
 
-`java -Dspring.profiles.active=local -jar target/ws-db-0.0.1-SNAPSHOT.war`
+`java -Dspring.profiles.active=local -jar target/ws-db-0.0.1-SNAPSHOT.jar`
 
 add new Employee:
 
@@ -57,7 +57,6 @@ throw an error:
 
 TODO
 ----
-* add `id` Integer field in Employee table and use it as unique key instead of name (change create table in BaseTestClass too)
-* add `DELETE` in EmployeeController and modify unit test
-* add `PUT` (update) in EmployeeController and modify unit test
-* dump every 5 minutes the `employee` table into a `CSV` file (define the file name in `application-{env}.properties`)
+* Add `id` field (type _UUID_) in Employee table and use it as unique key instead of _name_ filed (change create table in BaseTestClass too). Add a validator for `id`. Remove _id_ in _EmployeeController.addEmployee_ method.
+* Add `DELETE` in _EmployeeController_ and modify unit test.
+* Dump every 5 minutes the `employee` table into a `CSV` file (define the file name in `application-{env}.properties`).

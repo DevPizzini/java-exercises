@@ -34,7 +34,8 @@ public interface EmployeeService {
     }
 
     static Report validateAndInsert(@NonNull JdbcTemplate jdbcTemplate, @NonNull Employee employee) throws Exception {
-        val emp = new ValidatorEmployee(employee).validate();
+        val validator = new ValidatorEmployee(employee);
+        val emp = validator.validate();
         return noValidateAndInsert(jdbcTemplate, emp);
     }
 

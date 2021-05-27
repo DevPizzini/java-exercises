@@ -15,7 +15,6 @@ public class Main {
         val prop = System.getenv(env) != null ? System.getenv(env) : System.getProperty(env);
         if (prop == null || (!prop.equals("local") && !prop.equals("dev") && !prop.equals("it") && !prop.equals("prod") && !prop.equals("test"))) {
             log.error("bad {}", env + " ******************* use -Dspring.profiles.active={local|it|dev|prod|test} *******************");
-            assert (false);
             System.exit(1);
         }
         SpringApplication.run(Main.class, args);
