@@ -27,26 +27,32 @@ class EmployeeTest extends BaseTestClass {
 
         val headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+
         val randomName = StringUtil.randomString(10);
         val emp = new Employee(randomName, "architect", null);
         val empJson = JsonHelper.objectToJson(emp);
         val request = new HttpEntity<JsonNode>(empJson, headers);
         
-        val responseEntityStr = restTemplate.exchange(String.format("http://localhost:%d/employee/3", port), HttpMethod.POST, request, JsonNode.class);
+        val responseEntityJson = restTemplate.exchange(String.format("http://localhost:%d/employee/3", port), HttpMethod.POST, request, JsonNode.class);
 
         //check result
-        assertEquals(responseEntityStr.getStatusCode().value(), 200);
+        assertEquals(responseEntityJson.getStatusCode().value(), 200);
 
         val expected = new Report("OK", "stored new employee " + randomName.toUpperCase());
-        val s = JsonHelper.jsonToObject(responseEntityStr.getBody(), Report.class);
-        assertEquals(s, expected);
+
+        val report = JsonHelper.jsonToObject(responseEntityJson.getBody(), Report.class);
+        assertEquals(report, expected);
 
         // read employee
-        val res = new Employee(emp.getName().toUpperCase(), emp.getRole().toUpperCase(), null);
+
         val get = restTemplate.getForEntity(String.format("http://localhost:%d/employee/%s", port, randomName), JsonNode.class);
         assertEquals(200, get.getStatusCodeValue());
         val z = get.getBody();
-        assertEquals(res, JsonHelper.jsonToObject(z, Employee.class));
+
+        val emp2 =JsonHelper.jsonToObject(z, Employee.class);
+
+        val res = new Employee(emp.getName().toUpperCase(), emp.getRole().toUpperCase(), null);
+        assertEquals(res, emp2);
     }
 
     @Test
@@ -56,6 +62,7 @@ class EmployeeTest extends BaseTestClass {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         val emp = new Employee("", "   ", null);
+
         val empJson = JsonHelper.objectToJson(emp);
         val request = new HttpEntity<>(empJson, headers);//Object
 
