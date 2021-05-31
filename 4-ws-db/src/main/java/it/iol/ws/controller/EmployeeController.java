@@ -55,8 +55,12 @@ public class EmployeeController {
     ResponseEntity<JsonNode> deleteEmployee(@PathVariable String id) {
         try {
             log.debug("received {} ", id);
-            val report = EmployeeService.delete(jdbcTemplate, UUID.fromString(id));
-            return new ResponseEntity(JsonHelper.objectToJson(report), HttpStatus.OK);
+            try {
+                val report = EmployeeService.delete(jdbcTemplate, UUID.fromString(id));
+                return new ResponseEntity(JsonHelper.objectToJson(report), HttpStatus.OK);
+            }catch(IllegalArgumentException e){
+                return new ResponseEntity<>(JsonHelper.objectToJson("malformed UUID"), HttpStatus.BAD_REQUEST);
+            }
         } catch (ValidationException errors){
             log.error("deletedEmployee {}", errors.getErrors());
             return new ResponseEntity<>(JsonHelper.objectToJson(errors.getErrors()), HttpStatus.BAD_REQUEST);
@@ -70,14 +74,18 @@ public class EmployeeController {
     @GetMapping(path = "/{id}", produces = "application/json")
     ResponseEntity<JsonNode> getEmployee2(@PathVariable String id) {
         log.debug("received id: {}", id);
-        val json = EmployeeService.getById(jdbcTemplate, UUID.fromString(id));
-        if (json.isPresent()) {
-            val e = json.get();
-            return new ResponseEntity<>(JsonHelper.objectToJson(e), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            val json = EmployeeService.getById(jdbcTemplate, UUID.fromString(id));
+            if (json.isPresent()) {
+                val e = json.get();
+                return new ResponseEntity<>(JsonHelper.objectToJson(e), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }catch(IllegalArgumentException e){
+            val error="malformed UUID";
+            return new ResponseEntity<>(JsonHelper.objectToJson(error),HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @GetMapping(path = "role/{role}", produces = "application/json")

@@ -124,4 +124,60 @@ class EmployeeTest extends BaseTestClass {
         assertEquals(404, get.getStatusCodeValue());
 
     }
+
+    @Test
+    void getMalformedUUID() {
+            val headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            val randomName = StringUtil.randomString(10);
+            val randomId = UUID.randomUUID();
+            val emp = new Employee(randomId,randomName, "architect", null);
+            val empJson = JsonHelper.objectToJson(emp);
+            val request = new HttpEntity<JsonNode>(empJson, headers);
+
+            val responseEntityStr = restTemplate.exchange(String.format("http://localhost:%d/employee/", port), HttpMethod.POST, request, JsonNode.class);
+
+            //check result
+            assertEquals(responseEntityStr.getStatusCode().value(), 200);
+
+            val expected = new Report("OK", "stored new employee " + randomName.toUpperCase());
+            val s = JsonHelper.jsonToObject(responseEntityStr.getBody(), Report.class);
+            assertEquals(s, expected);
+
+            // read employee
+            val get = restTemplate.getForEntity(String.format("http://localhost:%d/employee/%s" , port, "123"), JsonNode.class);
+            assertEquals(400, get.getStatusCodeValue());
+            val z = get.getBody();
+            assertEquals("malformed UUID", JsonHelper.jsonToObject(z, String.class));
+        }
+
+    @Test
+    void deleteMalformedUUID() {
+        val headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        val randomName = StringUtil.randomString(10);
+        val randomId = UUID.randomUUID();
+        val emp = new Employee(randomId,randomName, "architect", null);
+        val empJson = JsonHelper.objectToJson(emp);
+        val request = new HttpEntity<JsonNode>(empJson, headers);
+
+        val responseEntityStr = restTemplate.exchange(String.format("http://localhost:%d/employee/", port), HttpMethod.POST, request, JsonNode.class);
+
+        //check result
+        assertEquals(responseEntityStr.getStatusCode().value(), 200);
+
+        val expected = new Report("OK", "stored new employee " + randomName.toUpperCase());
+        val s = JsonHelper.jsonToObject(responseEntityStr.getBody(), Report.class);
+        assertEquals(s, expected);
+
+        // delete employee
+        val delRequest = new HttpEntity<JsonNode>(headers);
+        val deleteResponse = restTemplate.exchange(String.format("http://localhost:%d/employee/%s" , port, "123"), HttpMethod.DELETE, delRequest, JsonNode.class);
+        assertEquals(400, deleteResponse.getStatusCodeValue());
+
+        val expectedError = "malformed UUID";
+        val deletedResponse = JsonHelper.jsonToObject(deleteResponse.getBody(), String.class);
+        assertEquals(expectedError, deletedResponse);
+
+    }
 }
