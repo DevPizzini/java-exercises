@@ -19,6 +19,10 @@ abstract class BaseTestClass {
     @Qualifier("jdbcTemplate1")
     protected JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    @Qualifier("jdbcTemplate2")
+    protected JdbcTemplate jdbcTemplate2;
+
     @BeforeEach
     void beforeAll() {
         assertEquals("it", environment.getProperty("spring.profiles.active"), "use -Dspring.profiles.active=it");
@@ -29,10 +33,11 @@ abstract class BaseTestClass {
         }
         try {
             jdbcTemplate.execute("CREATE TABLE employee (\n" +
+                    "id uuid NOT NULL,\n" +
                     "name varchar(25) NOT NULL,\n" +
                     "role varchar(25) NOT null,\n" +
                     "department varchar(15) null,\n" +
-                    "CONSTRAINT name_pkey PRIMARY KEY (name)\n" +
+                    "CONSTRAINT id_pkey PRIMARY KEY (id)\n" +
                     ");");
         } catch (Exception e) {
             assert e.getMessage().contains("already exists") : "error on creating table " + e.getMessage();

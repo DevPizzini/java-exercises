@@ -25,6 +25,10 @@ public interface JsonHelper {
         return objectMapper.readValue(jsonString, o);
     }
 
+    static <T>JsonNode stringToObjectJson (String jsonString) throws JsonProcessingException {
+        return objectMapper.readTree(jsonString);
+    }
+
     static String objectToString(Object o) throws JsonProcessingException {
         return objectMapper.writeValueAsString(o);
     }

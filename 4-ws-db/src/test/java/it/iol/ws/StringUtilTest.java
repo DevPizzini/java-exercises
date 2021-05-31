@@ -12,9 +12,8 @@ class StringUtilTest {
         assert (StringUtil.isBlank("\n"));
         assert (StringUtil.isBlank("\r"));
         assert (StringUtil.isBlank("\t"));
-        assert (StringUtil.isBlank(" "));
         assert (StringUtil.isBlank("\t \n \r"));
-
+        assert (StringUtil.isBlank(" "));
 
         assert (!StringUtil.isBlank("\t \n \r hi"));
         assert (!StringUtil.isBlank("bob"));

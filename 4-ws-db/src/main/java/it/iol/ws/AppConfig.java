@@ -24,4 +24,19 @@ public class AppConfig {
         return new JdbcTemplate(ds);
     }
 
+
+
+    @Bean(name = "db2")
+    @ConfigurationProperties(prefix = "mydatasource2.datasource")
+    public DataSource dataSource2() {
+        DataSource ds = DataSourceBuilder.create().build();
+        assert (ds != null);
+        return ds;
+    }
+
+    @Bean(name = "jdbcTemplate2")
+    public JdbcTemplate jdbcTemplate2(@Qualifier("db2") DataSource ds) {
+        return new JdbcTemplate(ds);
+    }
+
 }

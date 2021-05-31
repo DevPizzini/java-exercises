@@ -23,6 +23,7 @@ public class ValidatorEmployee implements IValidator {
         if (StringUtil.isBlank(employee.getRole())) validationException.add("role is empty");
     }
 
+
     private void nameValidator() {
         if (StringUtil.isBlank(employee.getName())) validationException.add("name is empty");
         else if (employee.getName().length() < 3) validationException.add("name is too short");
@@ -32,6 +33,7 @@ public class ValidatorEmployee implements IValidator {
      * returns an error List or the validated Employee
      */
     public Employee validate() throws ValidationException {
+
 
         nameValidator();
         roleValidator();
